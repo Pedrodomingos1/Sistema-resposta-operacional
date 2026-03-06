@@ -1,29 +1,40 @@
-🛡️ SROC: Sistema de Resposta Operacional CríticaEste repositório contém uma infraestrutura de microserviços de missão crítica, desenvolvida para eliminar o gargalo da latência em operações de um aglomerado de empresas da região. O sistema integra ingestão de alta performance (FastAPI), resiliência de dados (Redis) e orquestração de contingência (n8n), garantindo conformidade operacional e resposta a incidentes em tempo real.📋 Descrição do ProjetoO objetivo do SROC é estancar o prejuízo gerado pela demora na triagem de crises operacionais. Através de um pipeline de engenharia robusto, eventos críticos de múltiplos canais são centralizados, validados e processados sem intervenção manual lenta, garantindo que o tempo de resposta (MTTR) seja reduzido drasticamente, protegendo o ROI e a continuidade do negócio.A solução utiliza uma arquitetura de microserviços orientada a eventos, focada em resiliência: se a carga aumentar ou um serviço falhar, a fila de mensagens garante que nenhum dado ou alerta seja perdido.🛠️ Stack TecnológicoLinguagem & API: Python 3.9+ com FastAPI (Ingestão assíncrona e segura).Orquestração: n8n (Lógica de decisão e integração de fluxos).Mensageria/Fila: Redis (Resiliência e mitigação de picos de carga).Persistência/Auditoria: PostgreSQL (Log imutável para conformidade LGPD).Infraestrutura: Docker & Docker Compose (Isolamento e escalabilidade).Monitoramento: Webhooks e Logs de Auditoria em tempo real.🏗️ Arquitetura da SoluçãoO fluxo segue um padrão de alta disponibilidade, garantindo que a decisão técnica ocorra em milissegundos.Snippet de códigograph TD
-    subgraph Ingestão de Alta Performance
-    A["Sistemas Legados / ERP / Monitoramento"] -->|Eventos Críticos| B("API FastAPI (Python)")
-    B -->|Validação & Sanitização| C[("Fila de Mensagens Redis")]
-    end
-    
-    subgraph Inteligência Operacional
-    C -->|Consumo Assíncrono| D{"n8n (Cérebro do Fluxo)"}
-    D -->|Scripts Python Customizados| E{"Cálculo de Impacto"}
-    E -->|Urgência Crítica| F["Protocolo de Contingência Instantâneo"]
-    E -->|Monitoramento| G["Log de Status"]
-    end
-    
-    subgraph Saída e Auditoria
-    F -->|Alerta / Notificação| H["WhatsApp / Slack / Telegram"]
-    F -->|Comando de Rede / SSH| I["Remediação Automática"]
-    H --> J[("Banco de Dados PostgreSQL (Auditoria)")]
-    I --> J
-    G --> J
-    end
+SROC: Sistema de Resposta Operacional Crítica
 
-    style B fill:#4a90e2,stroke:#333,stroke-width:2px,color:#fff
-    style C fill:#d0021b,stroke:#333,stroke-width:2px,color:#fff
-    style D fill:#f5a623,stroke:#333,stroke-width:2px,color:#fff
-    style J fill:#7ed321,stroke:#333,stroke-width:2px,color:#fff
-⚙️ Funcionalidades PrincipaisIngestão Anti-Gargalo: Endpoint FastAPI otimizado para receber milhares de requisições simultâneas sem perda de performance.Resiliência Operacional: Utilização do Redis como buffer. Mesmo que o orquestrador sofra manutenção, as mensagens permanecem seguras na fila para processamento posterior.Triagem Técnica (Python): Lógica customizada para identificar falsos positivos e priorizar crises reais baseada em parâmetros de negócio.Auditoria e Conformidade (LGPD): Todo incidente gera um log imutável no PostgreSQL, permitindo rastrear o "Quem, Quando e Como" de cada crise resolvida.Notificação Multi-canal: Alertas críticos enviados instantaneamente para os tomadores de decisão, eliminando o tempo de "e-mail parado na caixa de entrada".Containerização Total: Ambiente 100% dockerizado, permitindo que a solução seja replicada em minutos para diferentes unidades ou empresas do aglomerado.🚀 Instalação e ExecuçãoPré-requisitosDocker e Docker Compose instalados.Python 3.9+ (para desenvolvimento local).Passo 1: Configuração do AmbienteClone o repositório e acesse a pasta do projeto:Bashgit clone https://github.com/seu-usuario/sroc-resiliencia-operacional.git
-cd sroc-resiliencia-operacional
-Passo 2: Subir a Infraestrutura (Docker)O comando abaixo inicia o FastAPI, Redis, n8n e PostgreSQL de forma integrada:Bashdocker-compose up -d
-Passo 3: Documentação da APIAcesse a documentação Swagger para testar a ingestão de incidentes:http://localhost:8000/docs📂 Estrutura de Auditoria (Logs de Conformidade)O controle de estado e auditoria é mantido no PostgreSQL com a seguinte estrutura lógica:ID_EventoOrigem (Empresa/Setor)Descrição do IncidenteStatusTempo de RespostaResponsável NotificadoSR-982Unidade_Industrial_01Queda de Link FibraRESOLVIDO14sGestor TI / Diretor OpsSR-983Financeiro_SedeTentativa de Acesso IndevidoBLOQUEADO2msCISO / SegurançaNota: Este sistema é uma ferramenta de infraestrutura crítica. A configuração de segurança de rede e firewall deve acompanhar a implementação conforme a política de cada empresa parceira.
+🛡️O SROC é um microssistema de engenharia desenvolvido para eliminar a latência em respostas a incidentes. Ele centraliza, filtra e resolve crises operacionais que afetam o faturamento (ROI) de empresas da região.
+
+🛠️ Como o Sistema Funciona (Fluxo de Trabalho)
+Para garantir clareza total, o fluxo segue este caminho lógico:
+
+ENTRADA: A API (FastAPI) recebe um alerta de erro ou evento crítico.
+
+TRIAGEM: O sistema valida os dados e joga para uma fila de segurança (Redis).
+
+DECISÃO: O orquestrador (n8n) avalia a gravidade:
+
+Se for Média/Baixa: Apenas registra no banco de dados para relatório.
+
+Se for ALTA/CRÍTICA: Dispara protocolos de urgência.
+
+AÇÃO: O sistema envia avisos imediatos (WhatsApp/Slack) ou executa comandos de correção.
+
+AUDITORIA: Tudo é gravado no PostgreSQL para conformidade com a LGPD.
+
+⚙️ O Que o SROC Faz na Prática
+Ingestão Sem Quedas: Usa FastAPI para receber milhares de alertas sem travar o sistema.
+
+Fila de Proteção: O Redis impede que mensagens se percam se houver uma sobrecarga de incidentes.
+
+Ramos de Resposta: O sistema sabe diferenciar um "teste de rotina" de uma "queda de servidor".
+
+Log de Conformidade: Gera uma tabela de auditoria para que o gestor saiba quem resolveu o quê e em quanto tempo.
+
+🛠️ Ferramentas Utilizadas (Stack)
+Linguagem: Python (FastAPI)
+
+Fila/Resiliência: Redis
+
+Orquestração: n8n
+
+Banco de Dados: PostgreSQL
+
+Infraestrutura: Docker
